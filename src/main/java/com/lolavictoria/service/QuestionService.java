@@ -23,7 +23,7 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public Question addQuestion(String link, String title, Category category) {
+    public Question addQuestion(String link, String title, Category category, Status status) {
         if (questionRepository.existsByLink(link)) {
             throw new IllegalArgumentException("This question has already been added: " + link);
         }
@@ -31,6 +31,7 @@ public class QuestionService {
         question.setLink(link);
         question.setTitle(title);
         question.setCategory(category);
+        question.setStatus(status);
         return questionRepository.save(question);
     }
 
@@ -48,14 +49,17 @@ public class QuestionService {
         question.setStatus(newStatus);
         question.setLastPracticedAt(LocalDateTime.now());
         question.setPracticeCount(question.getPracticeCount() + 1);
-
-        switch (newStatus) {
-            case PERFECT -> question.setNextReviewAt(null);
-            case NEEDS_RETRY -> question.setNextReviewAt(LocalDateTime.now().plusDays(1));
-            case MEDIUM -> question.setNextReviewAt(LocalDateTime.now().plusDays(3));
-        }
+         question.setNextReviewAt(calculateNextReviewAt(newStatus));
 
         return questionRepository.save(question);
+    }
+
+    private LocalDateTime calculateNextReviewAt(Status status) {
+        return switch (status) {
+            case PERFECT -> null;
+            case NEEDS_RETRY -> LocalDateTime.now().plusDays(1);
+            case MEDIUM -> LocalDateTime.now().plusDays(3);
+        };
     }
 
     public Question getQuestionById(Long id) {

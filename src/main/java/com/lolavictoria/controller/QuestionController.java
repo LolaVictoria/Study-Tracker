@@ -25,7 +25,7 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<Question> addQuestion(@Valid @RequestBody AddQuestionRequest request) {
-        Question question = questionService.addQuestion(request.link(), request.title(), request.category());
+        Question question = questionService.addQuestion(request.link(), request.title(), request.category(), request.status());
         return ResponseEntity.ok(question);
     }
 
@@ -81,7 +81,8 @@ public class QuestionController {
     public record AddQuestionRequest(
         @NotBlank(message = "Link is required") String link,
         @NotBlank(message = "Title is required") String title,
-        Category category
+        @NotBlank Category category,
+        @NotBlank Status status
     ) {}
     public record PracticeRequest(
         @jakarta.validation.constraints.NotNull(message = "Status is required") Status status
