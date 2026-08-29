@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questions")
+@RequestMapping("/api/questions")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -43,6 +43,15 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Question> updateQuestion(
+            @PathVariable Long id,
+            @RequestBody UpdateQuestionRequest request) {
+        Question question = questionService.updateQuestion(id, request.title(), request.category(), request.notes());
+        return ResponseEntity.ok(question);
+    }
+
+    
     @GetMapping
     public ResponseEntity<List<Question>> getQuestions(
             @RequestParam(required = false) Status status,
@@ -72,17 +81,18 @@ public class QuestionController {
             @RequestBody NotesRequest request) {
         Question question = questionService.updateNotes(id, request.notes());
         return ResponseEntity.ok(question);
-        }
+    }
 
-    
-   
-    
+        
+        
+        
+    public record UpdateQuestionRequest(String title, Category category, String notes) {}
     public record CategoryStats(Category category, long perfect, long medium, long needsRetry) {}
     public record AddQuestionRequest(
         @NotBlank(message = "Link is required") String link,
         @NotBlank(message = "Title is required") String title,
-        @NotBlank Category category,
-        @NotBlank Status status
+        Category category,
+        Status status
     ) {}
     public record PracticeRequest(
         @jakarta.validation.constraints.NotNull(message = "Status is required") Status status

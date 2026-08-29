@@ -81,6 +81,17 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
+    public Question updateQuestion(Long id, String title, Category category, String notes) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Question not found: " + id));
+
+        if (title != null) question.setTitle(title);
+        if (category != null) question.setCategory(category);
+        if (notes != null) question.setNotes(notes);
+
+        return questionRepository.save(question);
+    }
+
     public void deleteQuestion(Long id) {
         if (!questionRepository.existsById(id)) {
             throw new IllegalArgumentException("Question not found: " + id);
