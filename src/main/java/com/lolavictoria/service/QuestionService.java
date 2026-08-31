@@ -23,7 +23,7 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public Question addQuestion(String link, String title, Category category, Status status) {
+    public Question addQuestion(String link, String title, Category category, Status status, String notes) {
         if (questionRepository.existsByLink(link)) {
             throw new IllegalArgumentException("This question has already been added: " + link);
         }
@@ -32,6 +32,7 @@ public class QuestionService {
         question.setTitle(title);
         question.setCategory(category);
         question.setStatus(status);
+        question.setNotes(notes);
         return questionRepository.save(question);
     }
 
