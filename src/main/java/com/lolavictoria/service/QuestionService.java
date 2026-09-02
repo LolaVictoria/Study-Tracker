@@ -33,6 +33,13 @@ public class QuestionService {
         question.setCategory(category);
         question.setStatus(status);
         question.setNotes(notes);
+        
+        Status finalStatus = (status != null) ? status : Status.NEEDS_RETRY;
+        question.setStatus(finalStatus);
+        question.setNextReviewAt(calculateNextReviewAt(finalStatus));
+        question.setPracticeCount(1);
+        question.setLastPracticedAt(LocalDateTime.now());
+
         return questionRepository.save(question);
     }
 
@@ -68,7 +75,6 @@ public class QuestionService {
                 .orElseThrow(() -> new IllegalArgumentException("Question not found: " + id));
     }
     public List<Question> getDueQuestions() {
-        System.out.println("SCHEDULED JOB FIRED AT: " + java.time.LocalDateTime.now());
         return questionRepository.findAll().stream()
                 .filter(q -> q.getStatus() != Status.PERFECT)
                 .filter(q -> q.getNextReviewAt() != null && !q.getNextReviewAt().isAfter(LocalDateTime.now()))
