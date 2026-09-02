@@ -1,5 +1,9 @@
 package com.lolavictoria.controller;
 
+import com.lolavictoria.controller.QuestionController.AddQuestionRequest;
+import com.lolavictoria.controller.QuestionController.CategoryStats;
+import com.lolavictoria.controller.QuestionController.NotesRequest;
+import com.lolavictoria.controller.QuestionController.PracticeRequest;
 import com.lolavictoria.entity.Category;
 import com.lolavictoria.entity.Question;
 import com.lolavictoria.entity.Status;
@@ -47,7 +51,7 @@ public class QuestionController {
     public ResponseEntity<Question> updateQuestion(
             @PathVariable Long id,
             @RequestBody UpdateQuestionRequest request) {
-        Question question = questionService.updateQuestion(id, request.title(), request.category(), request.notes());
+        Question question = questionService.updateQuestion(id, request.link(), request.title(), request.category(), request.notes(), request.status());
         return ResponseEntity.ok(question);
     }
 
@@ -86,7 +90,8 @@ public class QuestionController {
         
         
         
-    public record UpdateQuestionRequest(String title, Category category, String notes) {}
+        
+    public record UpdateQuestionRequest(Long id, String link, String title, Category category, String notes, Status status) {}
     public record CategoryStats(Category category, long perfect, long medium, long needsRetry) {}
     public record AddQuestionRequest(
         @NotBlank(message = "Link is required") String link,

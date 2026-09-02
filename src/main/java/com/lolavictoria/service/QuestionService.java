@@ -88,17 +88,22 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
-    public Question updateQuestion(Long id, String title, Category category, String notes) {
+    public Question updateQuestion(Long id, String link, String title, Category category, String notes, Status status) {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Question not found: " + id));
 
+        if (link != null) question.setLink(link);
         if (title != null) question.setTitle(title);
         if (category != null) question.setCategory(category);
         if (notes != null) question.setNotes(notes);
 
+        if (status != null && status != question.getStatus()) {
+            question.setStatus(status);
+            question.setNextReviewAt(calculateNextReviewAt(status));
+        }
+
         return questionRepository.save(question);
     }
-
     public void deleteQuestion(Long id) {
         if (!questionRepository.existsById(id)) {
             throw new IllegalArgumentException("Question not found: " + id);
