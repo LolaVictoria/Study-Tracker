@@ -1,8 +1,10 @@
 package com.lolavictoria.util;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -11,9 +13,16 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @SuppressWarnings("deprecation")
-    private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Value("${jwt.secret}")
+    private String secretString;
+
+    private SecretKey key;
     private final long expirationMs = 86400000; // 24 hours
+
+    @PostConstruct
+    public void init() {
+        key = Keys.hmacShaKeyFor(secretString.getBytes());
+    }
 
     public String generateToken(String email) {
         return Jwts.builder()
