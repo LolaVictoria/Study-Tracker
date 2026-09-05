@@ -19,7 +19,7 @@ public class NotificationService {
         this.mailSender = mailSender;
     }
 
-    @Scheduled(cron = "0 0 5 * * *")
+    @Scheduled(cron = "0 0 5 * * *", zone = "Africa/Lagos")
     public void sendDueQuestionsEmail() {
         List<Question> dueQuestions = questionService.getDueQuestions();
 
