@@ -22,6 +22,5 @@ public enum Category {
     BIT_MANIPULATION,
     INTERVAL,
     TRIE,
-    GREEDY,
     OTHER
 }
