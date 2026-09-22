@@ -3,6 +3,7 @@ package com.lolavictoria.entity;
 public enum Category {
     ARRAY,
     STRING,
+    INTEGER,
     LINKED_LIST,
     STACK,
     QUEUE,
@@ -19,5 +20,8 @@ public enum Category {
     RECURSION,
     MATH,
     BIT_MANIPULATION,
+    INTERVAL,
+    TRIE,
+    GREEDY,
     OTHER
 }
